@@ -1,12 +1,15 @@
 class ProductsController < ApplicationController
+  caches_action :show
+  caches_page :index
+
   def index
     @products = Product.all
 
-    render json: @products
+    render json: @products, cached: true
   end
 
   def show
-    @product = Product.find(params[:id])
+    @product = Product.find_by(id: params[:id])  || NullProduct.new
 
     render json: @product
   end
